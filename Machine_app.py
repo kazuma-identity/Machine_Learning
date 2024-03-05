@@ -13,10 +13,9 @@ from sklearn.tree import  DecisionTreeClassifier
 from sklearn.neighbors import  KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 
-st.title("機械学習アプリ")
+st.title("Machine Learning Models")
 
-st.sidebar.markdown("### 機械学習に用いるcsvファイルを入力してください")
-
+st.sidebar.markdown("### Please input the CSV file for machine learning")
 
 uploaded_files = st.sidebar.text_input("Please enter the URL of the CSV file")
 csv = st.sidebar.button("CSV files")
@@ -27,11 +26,11 @@ if csv:
 if uploaded_files:
       df = pd.read_csv(uploaded_files,sep=";")
       df_columns = df.columns
-      st.markdown("### 入力データ")
+      st.markdown("### Input Data")
       st.dataframe(df.style.highlight_max(axis=0))
-      st.markdown("### 可視化 単変量")
-      x = st.selectbox("X軸", df_columns)
-      y = st.selectbox("Y軸", df_columns)
+      st.markdown("### Visualization Univariate")
+      x = st.selectbox("X-axis", df_columns)
+      y = st.selectbox("Y-axis", df_columns)
       fig = plt.figure(figsize= (12,8))
       plt.scatter(df[x],df[y])
       plt.xlabel(x,fontsize=18)
@@ -39,12 +38,12 @@ if uploaded_files:
       st.pyplot(fig)
 
 
-      st.markdown("### 可視化 ペアプロット")
-      item = st.multiselect("可視化するカラム", df_columns)
-      #散布図の色分け基準を１つ選択する。カテゴリ変数を想定
-      hue = st.selectbox("色の基準", df_columns)
+      st.markdown("### Visualization Pair Plot")
+      item = st.multiselect("Select columns to visualize", df_columns)
+      # Select one criterion for scatter plot color. Assuming categorical variable
+      hue = st.selectbox("Color criterion", df_columns)
       
-      execute_pairplot = st.button("ペアプロット描画")
+      execute_pairplot = st.button("Draw Pair Plot")
       if execute_pairplot:
             df_sns = df[item]
             df_sns["hue"] = df[hue]
@@ -52,15 +51,15 @@ if uploaded_files:
             st.pyplot(fig)
             
 
-      st.markdown("### モデリング")
-      ex = st.multiselect("説明変数を選択してください（複数選択可）", df_columns)
-      ob = st.selectbox("目的変数を選択してください", df_columns)
-      al = st.multiselect("アルゴリズムを選択してください（複数選択可）",["重回帰分析","ロジスティック回帰分析","サポートベクトルマシーン","k-NN","決定木","ランダムフォレスト"])
-      ak = st.button("実行")
+      st.markdown("### Modeling")
+      ex = st.multiselect("Select explanatory variables (multiple selection possible)", df_columns)
+      ob = st.selectbox("Select the target variable", df_columns)
+      al = st.multiselect("Select algorithms (multiple selection possible)",["Multiple Regression","Logistic Regression","Support Vector Machine","k-NN","Decision Tree","Random Forest"])
+      ak = st.button("Execute")
 
-      if "重回帰分析" in al:
+      if "Multiple Regression" in al:
                   
-                  st.markdown("#### 機械学習を実行します（重回帰分析）")
+                  st.markdown("#### Executing Machine Learning (Multiple Regression)")
                   lr_1 = linear_model.LinearRegression()
                   df_ex = df[ex]
                   df_ob = df[ob]
@@ -72,11 +71,11 @@ if uploaded_files:
                         my_bar.progress(percent_complete + 1)
 
                   col1, col2 = st.columns(2)
-                  col1.metric(label="トレーニングスコア", value=lr_1.score(X_train, y_train))
-                  col2.metric(label="テストスコア", value=lr_1.score(X_test, y_test))
+                  col1.metric(label="Training Score", value=lr_1.score(X_train, y_train))
+                  col2.metric(label="Test Score", value=lr_1.score(X_test, y_test))
 
-      if "ロジスティック回帰分析" in al:
-                  st.markdown("#### 機械学習を実行します（ロジスティック回帰分析）")
+      if "Logistic Regression" in al:
+                  st.markdown("#### Executing Machine Learning (Logistic Regression)")
                   lr_2 = LogisticRegression()
                   df_ex = df[ex]
                   df_ob = df[ob]
@@ -88,11 +87,10 @@ if uploaded_files:
                         my_bar.progress(percent_complete + 1)
 
                   col3, col4 = st.columns(2)
-                  col3.metric(label="トレーニングスコア", value=lr_2.score(X_train, y_train))
-                  col4.metric(label="テストスコア", value=lr_2.score(X_test, y_test))
-      if "サポートベクトルマシーン" in al:
-                  st.markdown("#### 機械学習を実行します（サポートベクトルマシーン）")
-
+                  col3.metric(label="Training Score", value=lr_2.score(X_train, y_train))
+                  col4.metric(label="Test Score", value=lr_2.score(X_test, y_test))
+      if "Support Vector Machine" in al:
+                  st.markdown("#### Executing Machine Learning (Support Vector Machine)")
                         
                   lr_3 = LinearSVC()
                   df_ex = df[ex]
@@ -105,11 +103,11 @@ if uploaded_files:
                         my_bar.progress(percent_complete + 1)
 
                   col5, col6 = st.columns(2)
-                  col5.metric(label="トレーニングスコア", value=lr_3.score(X_train, y_train))
-                  col6.metric(label="テストスコア", value=lr_3.score(X_test, y_test))
+                  col5.metric(label="Training Score", value=lr_3.score(X_train, y_train))
+                  col6.metric(label="Test Score", value=lr_3.score(X_test, y_test))
 
-      if "決定木" in al:
-                  st.markdown("#### 機械学習を実行します（決定木）")
+      if "Decision Tree" in al:
+                  st.markdown("#### Executing Machine Learning (Decision Tree)")
                         
                   lr_4 = DecisionTreeClassifier()
                   df_ex = df[ex]
@@ -123,11 +121,11 @@ if uploaded_files:
                         my_bar.progress(percent_complete + 1)
 
                   col7, col8 = st.columns(2)
-                  col7.metric(label="トレーニングスコア", value=lr_4.score(X_train, y_train))
-                  col8.metric(label="テストスコア", value=lr_4.score(X_test, y_test))
+                  col7.metric(label="Training Score", value=lr_4.score(X_train, y_train))
+                  col8.metric(label="Test Score", value=lr_4.score(X_test, y_test))
 
       if "k-NN" in al:
-                  st.markdown("#### 機械学習を実行します（k-NN）")      
+                  st.markdown("#### Executing Machine Learning (k-NN)")      
                   lr_5 = KNeighborsClassifier(n_neighbors=10)
                   df_ex = df[ex]
                   df_ob = df[ob]
@@ -139,10 +137,10 @@ if uploaded_files:
                         my_bar.progress(percent_complete + 1)
 
                   col9, col10 = st.columns(2)
-                  col9.metric(label="トレーニングスコア", value=lr_5.score(X_train, y_train))
-                  col10.metric(label="テストスコア", value=lr_5.score(X_test, y_test))
-      if "ランダムフォレスト" in al:
-                  st.markdown("#### 機械学習を実行します（ランダムフォレスト）")
+                  col9.metric(label="Training Score", value=lr_5.score(X_train, y_train))
+                  col10.metric(label="Test Score", value=lr_5.score(X_test, y_test))
+      if "Random Forest" in al:
+                  st.markdown("#### Executing Machine Learning (Random Forest)")
                         
                   lr_6 = RandomForestClassifier()
 
@@ -156,10 +154,6 @@ if uploaded_files:
                         time.sleep(0.02)
                         my_bar.progress(percent_complete + 1)
 
-                  col11, col12 = st.columns(2)
-                  col11.metric(label="トレーニングスコア", value=lr_6.score(X_train, y_train))
-                  col12.metric(label="テストスコア", value=lr_6.score(X_test, y_test))
-                              
-    
-
-           
+                  col9, col10 = st.columns(2)
+                  col9.metric(label="Training Score", value=lr_5.score(X_train, y_train))
+                  col10.metric(label="Test Score", value=lr_5.score(X_test, y_test))
