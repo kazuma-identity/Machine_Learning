@@ -18,13 +18,11 @@ st.title("Machine Learning Models")
 st.sidebar.markdown("### Please input the CSV file for machine learning")
 
 uploaded_files = st.sidebar.text_input("Please enter the URL of the CSV file")
-csv = st.sidebar.button("CSV files")
-if csv:
-      uploaded_files = st.sidebar.file_uploader("Choose a CSV file", accept_multiple_files= False)
-
 
 if uploaded_files:
       df = pd.read_csv(uploaded_files,sep=";")
+      df = df.replace('?', np.nan).dropna()
+      pd.set_option("styler.render.max_elements", 500000)
       df_columns = df.columns
       st.markdown("### Input Data")
       st.dataframe(df.style.highlight_max(axis=0))
